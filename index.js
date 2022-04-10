@@ -19,11 +19,14 @@ let board = [
   [0, 0, 0, 4, 1, 9, 0, 0, 5],
   [0, 0, 0, 0, 8, 0, 0, 7, 9],
 ];
-const printBoard = (board) => {
+
+// Empty slots are represented as 0's.
+
+const printBoard = () => {
   for (let i = 0; i < board.length; i++) {
     if (i % 3 == 0 && i != 0) {
       // 3 and 6
-      process.stdout.write("-------|--------|------\n");
+      process.stdout.write("------|-------|------\n");
     }
     for (let j = 0; j < board[i].length; j++) {
       if (j % 3 == 0 && j != 0) {
@@ -31,8 +34,9 @@ const printBoard = (board) => {
         process.stdout.write(" | ");
       }
       if (j == 8) {
-        // end of row
         process.stdout.write(board[i][j] + "\n");
+      } else if (j == 2 || j == 5) {
+        process.stdout.write(board[i][j] + "");
       } else {
         process.stdout.write(board[i][j] + " ");
       }
@@ -40,7 +44,7 @@ const printBoard = (board) => {
   }
 };
 
-const isValid = (board, num, position) => {
+const isValid = (num, position) => {
   // checking row validation
   for (let i = 0; i < board.length; i++) {
     if (board[position[0]][i] == num) {
@@ -71,38 +75,39 @@ const isValid = (board, num, position) => {
   return true;
 };
 
+const findEmptySlot = () => {
+  for (let i = 0; i < board.length; i++) {
+    // row
+    for (let j = 0; j < board[i].length; j++) {
+      // col
+      if (board[i][j] == 0) {
+        return [i, j];
+      }
+    }
+  }
+};
+
 const solveBoard = () => {
   let row;
   let col;
   let find = findEmptySlot(); // find an empty slot (0)
   if (!find) {
-    return true; // no empty slot
+    return true; // no empty slot, we return true
   } else {
     row = find[0];
     col = find[1];
   }
   for (let number = 1; number < 10; number++) {
-    if (isValid(board, number, [row, col])) {
-      // is placeable
+    if (isValid(number, [row, col])) {
       board[row][col] = number;
       if (solveBoard()) {
-        // recursively call the function
+        // recursively call the function untill we find the solution
         return true;
       }
       board[row][col] = 0; // we backtrack and reset the position
     }
   }
   return false;
-};
-
-const findEmptySlot = () => {
-  for (let i = 0; i < board.length; i++) {
-    for (let j = 0; j < board[i].length; j++) {
-      if (board[i][j] == 0) {
-        return [i, j];
-      }
-    }
-  }
 };
 
 console.log("\nPre-solved board");

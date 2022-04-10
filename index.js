@@ -101,7 +101,7 @@ const solveBoard = () => {
     if (isValid(number, [row, col])) {
       board[row][col] = number;
       if (solveBoard()) {
-        // recursively call the function untill we find the solution
+        // recursively call the function until we find the solution
         return true;
       }
       board[row][col] = 0; // we backtrack and reset the position
